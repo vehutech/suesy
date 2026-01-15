@@ -1,33 +1,42 @@
 {
   "name": "suesy",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@prisma/adapter-pg": "^7.2.0",
     "@prisma/client": "^7.2.0",
-    "bcryptjs": "^3.0.3",
-    "better-auth": "^1.4.13",
+    "@tailwindcss/postcss": "^4.1.18",
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.5.1",
     "clsx": "^2.1.1",
-    "next": "16.1.1",
-    "prisma": "^7.2.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "sonner": "^2.0.7",
-    "tailwind-merge": "^3.4.0"
+    "csv-parse": "^5.6.0",
+    "next": "^16.1.2",
+    "pg": "^8.17.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sonner": "^1.7.1",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20.19.29",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.1",
-    "tailwindcss": "^4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20",
+    "@types/pg": "^8.16.0",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.4.23",
+    "dotenv-cli": "^11.0.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.18",
+    "postcss": "^8.5.6",
+    "prisma": "^7.2.0",
+    "tailwindcss": "^3.4.19",
     "typescript": "^5"
   }
 }

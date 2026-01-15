@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateAdminLogin, setAdminCookie } from '@/lib/auth';
+import { validateAdminLogin } from '@/lib/auth';
+import { randomBytes } from 'crypto';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,9 +23,21 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    await setAdminCookie();
+    // Generate admin token
+    const token = randomBytes(32).toString('hex');
     
-    return NextResponse.json({ success: true });
+    // Create response with cookie set directly
+    const response = NextResponse.json({ success: true });
+    
+    response.cookies.set('admin_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60, // 1 hour
+      path: '/',
+    });
+    
+    return response;
   } catch (error) {
     console.error('Admin login error:', error);
     return NextResponse.json(

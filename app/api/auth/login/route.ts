@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { validateStudentLogin, createSession, setSessionCookie } from '@/lib/auth';
+import { validateStudentLogin, createSession } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,19 +22,24 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Create session
     const token = await createSession(result.student!.id);
-    await setSessionCookie(token);
     
-    return NextResponse.json({
-      success: true,
-      student: {
-        id: result.student!.id,
-        matricNumber: result.student!.matricNumber,
-        email: result.student!.email,
-        name: result.student!.name,
-        imageUrl: result.student!.imageUrl,
-      },
+    // Create response with cookie
+    const response = NextResponse.json({ 
+      success: true, 
+      student: result.student 
     });
+    
+    response.cookies.set('session_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      path: '/',
+    });
+    
+    return response;
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json(

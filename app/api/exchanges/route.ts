@@ -9,6 +9,49 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
+    // Check if this is an admin request
+    const adminToken = request.cookies.get('admin_token')?.value;
+    
+    if (adminToken) {
+      // Admin can see all exchanges
+      const exchanges = await prisma.exchangeRequest.findMany({
+        include: {
+          requester: {
+            select: {
+              id: true,
+              name: true,
+              matricNumber: true,
+              imageUrl: true,
+            },
+          },
+          receiver: {
+            select: {
+              id: true,
+              name: true,
+              matricNumber: true,
+              imageUrl: true,
+            },
+          },
+          requestedProduct: {
+            select: {
+              title: true,
+            },
+          },
+          offeredProduct: {
+            select: {
+              title: true,
+            },
+          },
+        },
+        orderBy: {
+          createdAt: 'desc',
+        },
+      });
+      
+      return NextResponse.json({ exchanges });
+    }
+    
+    // Student request - need to be logged in
     const student = await getCurrentStudent();
     if (!student) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
