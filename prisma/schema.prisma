@@ -1,0 +1,126 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Student {
+  id           String    @id @default(cuid())
+  matricNumber String    @unique
+  email        String    @unique
+  imageUrl     String
+  name         String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  products              Product[]
+  sessions              Session[]
+  sentExchangeRequests  ExchangeRequest[] @relation("requester")
+  receivedExchangeRequests ExchangeRequest[] @relation("receiver")
+  sentMessages          Message[] @relation("sender")
+  receivedMessages      Message[] @relation("recipient")
+  notifications         Notification[]
+  
+  @@index([email])
+  @@index([matricNumber])
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  title         String
+  description   String   @db.Text
+  category      String
+  condition     String
+  monetaryWorth Float
+  images        String[]
+  forSale       Boolean  @default(false)
+  salePrice     Float?
+  status        String   @default("available") // available, exchanged, sold, deleted
+  studentId     String
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  requestsAsRequested ExchangeRequest[] @relation("requestedProduct")
+  requestsAsOffered   ExchangeRequest[] @relation("offeredProduct")
+  
+  @@index([studentId])
+  @@index([status])
+  @@index([category])
+}
+
+model ExchangeRequest {
+  id                String   @id @default(cuid())
+  requesterId       String
+  requester         Student  @relation("requester", fields: [requesterId], references: [id], onDelete: Cascade)
+  receiverId        String
+  receiver          Student  @relation("receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  requestedProductId String
+  requestedProduct  Product  @relation("requestedProduct", fields: [requestedProductId], references: [id], onDelete: Cascade)
+  offeredProductId  String
+  offeredProduct    Product  @relation("offeredProduct", fields: [offeredProductId], references: [id], onDelete: Cascade)
+  status            String   @default("pending") // pending, accepted, rejected, completed, cancelled
+  message           String?  @db.Text
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  messages          Message[]
+  
+  @@index([requesterId])
+  @@index([receiverId])
+  @@index([status])
+}
+
+model Message {
+  id               String          @id @default(cuid())
+  exchangeRequestId String
+  exchangeRequest  ExchangeRequest @relation(fields: [exchangeRequestId], references: [id], onDelete: Cascade)
+  senderId         String
+  sender           Student         @relation("sender", fields: [senderId], references: [id], onDelete: Cascade)
+  recipientId      String
+  recipient        Student         @relation("recipient", fields: [recipientId], references: [id], onDelete: Cascade)
+  content          String          @db.Text
+  read             Boolean         @default(false)
+  createdAt        DateTime        @default(now())
+  
+  @@index([exchangeRequestId])
+  @@index([senderId])
+  @@index([recipientId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  type      String   // exchange_request, exchange_accepted, exchange_rejected, message, product_deleted
+  title     String
+  message   String   @db.Text
+  read      Boolean  @default(false)
+  data      Json?
+  createdAt DateTime @default(now())
+  
+  @@index([studentId])
+  @@index([read])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@index([token])
+  @@index([studentId])
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
