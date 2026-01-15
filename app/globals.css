@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,39 +8,28 @@
     /* Light Mode - Calm, Saturated Colors */
     --background: 0 0% 98%;
     --foreground: 222 47% 11%;
-    
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
-    
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
-    
     --primary: 221 83% 53%;
     --primary-foreground: 210 40% 98%;
-    
     --secondary: 142 76% 36%;
     --secondary-foreground: 144 61% 98%;
-    
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
-    
     --accent: 280 89% 65%;
     --accent-foreground: 288 59% 98%;
-    
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 221 83% 53%;
-    
     --radius: 0.5rem;
-    
     /* Custom Colors */
     --success: 142 76% 36%;
     --warning: 45 93% 47%;
     --info: 199 89% 48%;
-    
     /* Surfaces */
     --surface-elevated: 0 0% 100%;
     --surface-sunken: 210 40% 96%;
@@ -51,37 +39,27 @@
     /* Dark Mode - Calm, Muted Colors */
     --background: 222 47% 11%;
     --foreground: 210 40% 98%;
-    
     --card: 222 47% 14%;
     --card-foreground: 210 40% 98%;
-    
     --popover: 222 47% 14%;
     --popover-foreground: 210 40% 98%;
-    
     --primary: 217 91% 60%;
     --primary-foreground: 222 47% 11%;
-    
     --secondary: 142 69% 58%;
     --secondary-foreground: 222 47% 11%;
-    
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
-    
     --accent: 280 65% 60%;
     --accent-foreground: 210 40% 98%;
-    
     --destructive: 0 62% 50%;
     --destructive-foreground: 210 40% 98%;
-    
     --border: 217 33% 17%;
     --input: 217 33% 17%;
     --ring: 217 91% 60%;
-    
     /* Custom Colors */
     --success: 142 69% 58%;
     --warning: 45 93% 47%;
     --info: 199 89% 48%;
-    
     /* Surfaces */
     --surface-elevated: 222 47% 14%;
     --surface-sunken: 222 47% 8%;
@@ -89,31 +67,21 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  
   body {
-    @apply bg-background text-foreground font-body;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 400;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
   }
 }
 
 @layer utilities {
-  .font-heading {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 600;
-  }
-  
-  .font-body {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 400;
-  }
-  
   .text-balance {
     text-wrap: balance;
   }
