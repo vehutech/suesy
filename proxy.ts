@@ -15,19 +15,14 @@ export function proxy(request: NextRequest) {
     hasAdminToken: !!adminToken,
   });
   
+  // Allow root path "/" to always load the landing page
+  if (pathname === '/') {
+    console.log('✅ Allowing access to landing page');
+    return NextResponse.next();
+  }
+  
   // Admin routes
   const isAdminRoute = pathname.startsWith('/admin-panel');
-  
-  // Redirect root to appropriate page
-  if (pathname === '/') {
-    if (adminToken) {
-      return NextResponse.redirect(new URL('/admin-panel', request.url));
-    }
-    if (sessionToken) {
-      return NextResponse.redirect(new URL('/feed', request.url));
-    }
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
   
   // IMPORTANT: Prevent admins from accessing student routes
   if (pathname === '/login' && adminToken) {
