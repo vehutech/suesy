@@ -7,12 +7,14 @@ import { Button } from '@/app/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/app/components/ui/Card';
 import { toast } from 'sonner';
 import { ThemeToggle } from '@/app/components/ui/ThemeToggle';
+import { Eye, EyeClosed } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,16 +94,21 @@ export default function AdminLoginPage() {
               required
             />
             
+            <div className='relative'>
+
             <Input
               label="Password"
-              type="password"
+              type={isPasswordVisible ? "text" : "password"}
               placeholder="Enter admin password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
               required
-            />
-            
+              />
+              <div onClick={() => setIsPasswordVisible(!isPasswordVisible)} className='cursor-pointer absolute top-9 right-3'>
+                {isPasswordVisible ? <EyeClosed /> : <Eye/>}
+              </div>
+              </div>
             <Button
               type="submit"
               variant="secondary"
